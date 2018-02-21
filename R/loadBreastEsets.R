@@ -22,7 +22,7 @@
 #' @importFrom stats complete.cases sd quantile
 #' @examples
 #'
-#' esetsAndDups = loadOvarianEsets()
+#' esetsAndDups = loadBreastEsets()
 
 
 loadBreastEsets = function(removeDuplicates = TRUE, quantileCutoff = 0, rescale = FALSE, minNumberGenes = 0,
@@ -139,18 +139,18 @@ loadBreastEsets = function(removeDuplicates = TRUE, quantileCutoff = 0, rescale 
       next
     }
     if(nrow(eset) < minNumberGenes) {
-      message(paste("excluding experiment hub dataset",ovarianData[i]$title,"(minNumberGenes)"))
+      message(paste("excluding experiment hub dataset",breastData[i]$title,"(minNumberGenes)"))
       next
     }
     if(removeRetracted && length(grep("retracted", Biobase::experimentData(eset)@other$warnings$warnings)) > 0){
-      message(paste("excluding experiment hub dataset",ovarianData[i]$title,"(removeRetracted)"))
+      message(paste("excluding experiment hub dataset",breastData[i]$title,"(removeRetracted)"))
       next
     }
     if(removeSubsets && length(grep("subset", Biobase::experimentData(eset)@other$warnings$warnings)) > 0){
-      message(paste("excluding experiment hub dataset",ovarianData[i]$title,"(removeSubsets)"))
+      message(paste("excluding experiment hub dataset",breastData[i]$title,"(removeSubsets)"))
       next
     }
-    message(paste("including experiment hub dataset",ovarianData[i]$title))
+    message(paste("including experiment hub dataset",breastData[i]$title))
     ##    featureNames(eset) <- make.names(featureNames(eset))  ##should not do this, it is irreversible.
     esets[[i]] <- eset
     rm(eset)
