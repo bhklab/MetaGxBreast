@@ -85,7 +85,7 @@ loadBreastEsets = function(removeDuplicates = TRUE, quantileCutoff = 0, rescale 
   esets <- list()
   for(i in seq_len(length(breastData)))
   {
-    esets[[i]] = ovarianData[[names(breastData)[i]]]
+    esets[[i]] = breastData[[names(breastData)[i]]]
     names(esets)[i] = breastData[i]$title
   }
 
