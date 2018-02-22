@@ -10,7 +10,7 @@ License: Artistic-2.0
 Depends: Biobase, stats, lattice, impute, AnnotationHub, ExperimentHub, R (>= 3.5.0)
 Suggests: testthat, xtable
 NeedsCompilation: no
-biocViews: Microarray, Software, GeneExpression, OneChannel, GeneSetEnrichment, GeneSignaling, Pathways, Preprocessing, Survival
+biocViews: ExpressionData, CancerData, Homo_sapiens_Data, ArrayExpress, GEO, NCI, MicroarrayData
 LazyData: yes
 Packaged: 2015-11-12 20:33:41 UTC; DeenaGendoo
 RoxygenNote: 6.0.1
