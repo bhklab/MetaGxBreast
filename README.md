@@ -1,7 +1,7 @@
 MetaGxBreast
 ========
 
-ExperimentalHubData package to be submitted containing 35 breast cancer datasets
+ExperimentalHubData package to be submitted containing 39 breast cancer datasets
 
 
 Installation
