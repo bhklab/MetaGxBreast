@@ -1,0 +1,172 @@
+%\VignetteIndexEntry{MetaGxBreast: a package for breast cancer gene expression analysis}
+%\VignetteDepends{xtable}
+%\VignetteSuggests{}
+%\VignetteKeywords{}
+%\VignettePackage{MetaGxBreast}
+
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{color}
+
+
+\title{MetaGxBreast: a package for breast cancer gene expression analysis}
+
+\author[1,2]{Deena M.A. Gendoo}
+\author[1]{Natchar Ratanasirigulchai}
+\author[1]{Michael Zon}
+\author[2]{Gregory Chen}
+\author[3,4]{Levi Waldron}
+\author[1,2]{Benjamin Haibe-Kains\thanks{benjamin.haibe.kains@utoronto.ca }}
+
+\affil[1]{Bioinformatics and Computational Genomics Laboratory, Princess Margaret Cancer Center, University Health Network, Toronto, Ontario, Canada}
+\affil[2]{Department of Medical Biophysics, University of Toronto, Toronto, Canada}
+\affil[3]{Department of Biostatistics and Computational Biology, Dana-Farber Cancer Institute, Boston, MA, USA}
+\affil[4]{Department of Biostatistics, Harvard School of Public Health, Boston, MA, USA}
+
+\SweaveOpts{highlight=TRUE, tidy=TRUE, keep.space=TRUE, keep.blank.space=FALSE, keep.comment=TRUE}
+
+<<setup,echo=FALSE,results=hide,eval=FALSE>>=
+options(keep.source=TRUE, width = 50)
+@
+
+\begin{document}
+\setkeys{Gin}{width=1.2\textwidth}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+%------------------------------------------------------------
+\section{Installing the Package}
+%------------------------------------------------------------
+
+The MetaGxBreast package is a compendium of Breast Cancer datasets.
+The package is publicly available and can be installed from Bioconductor into R version 3.5.0 or higher.
+
+To install the MetaGxBreast package from Bioconductor:
+<<install-pkg,eval=FALSE>>=
+source("http://bioconductor.org/biocLite.R")
+biocLite("MetaGxBreast")
+@
+
+%------------------------------------------------------------
+\section{Loading Datasets}
+%------------------------------------------------------------
+First we load the MetaGxBreast package into the workspace.
+
+To load the packages into R, please use the following commands:
+<<loadlib>>=
+library(MetaGxBreast)
+esets = MetaGxBreast::loadBreastEsets()[[1]]
+@
+
+This will load 39 expression datasets, with patients selected according to the default settings of the loadBreastEsets script. Users can modify the parameters of the function to restrict datasets that do not meet certain criteria from loading, some example parameters are shown below:
+
+\begin{description}
+\item Datasets:  Retain only genes that are common across all platforms loaded (default = FALSE)
+\item Datasets:  Retain studies with a minimum sample size (default = 0)
+\item Datasets:  Retain studies with a minimum umber of genes (default = 0)
+\item Datasets:  Retain studies with a minimum number of survival events (default = 0)
+\item Datasets:  Remove duplicate samples (default = TRUE)
+\end{description}
+
+
+%------------------------------------------------------------
+\section{Obtaining Sample Counts in Datasets}
+%------------------------------------------------------------
+
+To obtain the number of samples per dataset, run the following:
+
+<<sampleNumber-summary, results=tex>>=
+numSamples <- vapply(seq_along(esets), FUN=function(i, esets){
+  length(sampleNames(esets[[i]]))
+  }, numeric(1), esets=esets)
+
+
+SampleNumberSummaryAll <- data.frame(NumberOfSamples = numSamples,
+                                     row.names = names(esets))
+total <- sum(SampleNumberSummaryAll[,"NumberOfSamples"])
+SampleNumberSummaryAll <- rbind(SampleNumberSummaryAll, total)
+rownames(SampleNumberSummaryAll)[nrow(SampleNumberSummaryAll)] <- "Total"
+
+require(xtable)
+print(xtable(SampleNumberSummaryAll,digits = 2), floating = FALSE)
+@
+%------------------------------------------------------------
+\section{Assess Phenotype Data}
+%------------------------------------------------------------
+
+We can also obtain a summary of the phenotype data (pData) for each expression dataset.
+Here, we assess the proportion of samples in every datasets that contain a specific pData variable.
+<<sampleNumberSummariesPdata, fig=TRUE>>=
+#pData Variables
+pDataID <- c("sample_type", "histological_type", "primarysite", "summarygrade",
+             "summarystage", "tumorstage", "grade",
+             "age_at_initial_pathologic_diagnosis", "pltx", "tax",
+             "neo", "days_to_tumor_recurrence", "recurrence_status",
+             "days_to_death", "vital_status")
+
+
+pDataPercentSummaryTable <- NULL
+pDataSummaryNumbersTable <- NULL
+
+pDataSummaryNumbersList = lapply(esets, function(x)
+  vapply(pDataID, function(y) sum(!is.na(pData(x)[,y])), numeric(1)))
+
+pDataPercentSummaryList = lapply(esets, function(x)
+  vapply(pDataID, function(y)
+    sum(!is.na(pData(x)[,y]))/nrow(pData(x)), numeric(1))*100)
+
+pDataSummaryNumbersTable = sapply(pDataSummaryNumbersList, function(x) x)
+pDataPercentSummaryTable = sapply(pDataPercentSummaryList, function(x) x)
+
+rownames(pDataSummaryNumbersTable) <- pDataID
+rownames(pDataPercentSummaryTable) <- pDataID
+colnames(pDataSummaryNumbersTable) <- names(esets)
+colnames(pDataPercentSummaryTable) <- names(esets)
+
+pDataSummaryNumbersTable <- rbind(pDataSummaryNumbersTable, total)
+rownames(pDataSummaryNumbersTable)[nrow(pDataSummaryNumbersTable)] <- "Total"
+
+
+# Generate a heatmap representation of the pData
+pDataPercentSummaryTable<-t(pDataPercentSummaryTable)
+pDataPercentSummaryTable<-cbind(Name=(rownames(pDataPercentSummaryTable))
+                                ,pDataPercentSummaryTable)
+
+nba<-pDataPercentSummaryTable
+gradient_colors = c("#ffffff","#ffffd9","#edf8b1","#c7e9b4","#7fcdbb",
+                    "#41b6c4","#1d91c0","#225ea8","#253494","#081d58")
+
+library(lattice)
+nbamat<-as.matrix(nba)
+rownames(nbamat)<-nbamat[,1]
+nbamat<-nbamat[,-1]
+Interval<-as.numeric(c(10,20,30,40,50,60,70,80,90,100))
+
+levelplot(nbamat,col.regions=gradient_colors,
+          main="Available Clinical Annotation",
+          scales=list(x=list(rot=90, cex=0.5),
+                      y= list(cex=0.5),key=list(cex=0.2)),
+          at=seq(from=0,to=100,length=10),
+          cex=0.2, ylab="", xlab="", lattice.options=list(),
+          colorkey=list(at=as.numeric(factor(c(seq(from=0, to=100, by=10)))),
+                  labels=as.character(c( "0","10%","20%","30%", "40%","50%",
+                                         "60%", "70%", "80%","90%", "100%"),
+                                      cex=0.2,font=1,col="brown",height=1,
+                                      width=1.4), col=(gradient_colors)))
+
+@
+
+
+
+%------------------------------------------------------------
+\section{Session Info}
+%------------------------------------------------------------
+<<sessionInfo,echo=FALSE,results=tex,eval=TRUE>>=
+toLatex(sessionInfo())
+@
+
+\end{document}
