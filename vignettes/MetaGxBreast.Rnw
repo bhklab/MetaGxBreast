@@ -13,9 +13,9 @@
 
 \title{MetaGxBreast: a package for breast cancer gene expression analysis}
 
+\author[1]{Michael Zon}
 \author[1,2]{Deena M.A. Gendoo}
 \author[1]{Natchar Ratanasirigulchai}
-\author[1]{Michael Zon}
 \author[2]{Gregory Chen}
 \author[3,4]{Levi Waldron}
 \author[1,2]{Benjamin Haibe-Kains\thanks{benjamin.haibe.kains@utoronto.ca }}
