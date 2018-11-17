@@ -86,7 +86,8 @@ loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE, qua
   
   hub = ExperimentHub::ExperimentHub()
   #AnnotationHub::possibleDates(hub)
-  breastData = query(hub, "MetaGxBreast")
+  #ovarianData = query(hub, c("MetaGxOvarian", "ExpressionSet"))
+  breastData = query(hub, c("MetaGxBreast", "ExpressionSet"))
   tcgaInd = which(grepl("TCGA", breastData$title))
   metabricInd = which(grepl("METABRIC", breastData$title))
   if(length(loadString) == 1)
