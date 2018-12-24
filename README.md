@@ -9,6 +9,7 @@ Installation
 
 The package can be installed by running the below two lines
 
-source("https://bioconductor.org/biocLite.R")
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
 
-biocLite("MetaGxBreast")
+BiocManager::install("MetaGxBreast")
