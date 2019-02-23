@@ -7,7 +7,8 @@
 loadBreastEsets(loadString = "majority", removeDuplicates = TRUE,
   quantileCutoff = 0, rescale = FALSE, minNumberGenes = 0,
   minNumberEvents = 0, minSampleSize = 0, removeRetracted = TRUE,
-  removeSubsets = TRUE, keepCommonOnly = FALSE, imputeMissing = FALSE)
+  removeSubsets = TRUE, keepCommonOnly = FALSE,
+  imputeMissing = FALSE)
 }
 \arguments{
 \item{loadString}{a character vector specifying which data will be loaded. The default is "majority", which loads in 37 of the 39 datasets.
