@@ -1,16 +1,16 @@
 Package: MetaGxBreast
 Type: Package
 Title: Transcriptomic Breast Cancer Datasets
-Version: 0.99.4
+Version: 0.99.5
 Date: 2018-02-25
 Author: Michael Zon <michaelzon7@gmail.com>, Deena M.A. Gendoo  <deena.gendoo@utoronto.ca>, Benjamin Haibe-Kains <benjamin.haibe.kains@utoronto.ca>
 Maintainer: Michael Zon <michaelzon7@gmail.com>
 Description: A collection of Breast Cancer Transcriptomic Datasets that are part of the MetaGxData package compendium. 
 License: Artistic-2.0
-Depends: Biobase, stats, lattice, impute, AnnotationHub, ExperimentHub, R (>= 3.5.0)
+Depends: Biobase, stats, lattice, impute, AnnotationHub, ExperimentHub, SummarizedExperiment, R (>= 3.6.0)
 Suggests: testthat, xtable
 NeedsCompilation: no
-biocViews: ExpressionData, ExperimentHub, CancerData, Homo_sapiens_Data, ArrayExpress, GEO, NCI, MicroarrayData, ExperimentData, BreastCancerData
+biocViews: ExpressionData, ExperimentHub, CancerData, Homo_sapiens_Data, ArrayExpress, GEO, NCI, MicroarrayData, ExperimentData
 LazyData: yes
-Packaged: 2015-11-12 20:33:41 UTC; DeenaGendoo
-RoxygenNote: 6.0.1
+Packaged: 2018-03-12 20:33:41 UTC; Michael Zon
+RoxygenNote: 6.1.1
