@@ -4,3 +4,11 @@ CHANGES IN VERSION 0.99.0
 NEW FEATURES
 
     o This is the first iteration of the MetaGxBreast package. The package contains 39 breast cancer Esets
+    
+CHANGES IN VERSION 0.99.5
+-------------------------
+
+NEW FEATURES
+
+    o loadBreastDatasets() added to load in summarized experiment datasets as oppose to the outdated esets
+    o Fixed incorrect time to distant metastases present in GSE58644
