@@ -47,8 +47,9 @@ The package is publicly available and can be installed from Bioconductor into R 
 
 To install the MetaGxBreast package from Bioconductor:
 <<install-pkg,eval=FALSE>>=
-source("http://bioconductor.org/biocLite.R")
-biocLite("MetaGxBreast")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("MetaGxBreast")
 @
 
 %------------------------------------------------------------
