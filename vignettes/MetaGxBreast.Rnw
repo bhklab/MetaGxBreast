@@ -103,8 +103,8 @@ We can also obtain a summary of the phenotype data (pData) for each expression d
 Here, we assess the proportion of samples in every datasets that contain a specific pData variable.
 <<sampleNumberSummariesPdata, fig=TRUE>>=
 #pData Variables
-pDataID <- c("er","pgr", "her2", "age_at_initial_pathologic_diagnosis", 
-             "grade", "dmfs_days", "dmfs_status", "days_to_tumor_recurrence", 
+pDataID <- c("er","pgr", "her2", "age_at_initial_pathologic_diagnosis",
+             "grade", "dmfs_days", "dmfs_status", "days_to_tumor_recurrence",
              "recurrence_status", "days_to_death", "vital_status", "sample_type", "treatment")
 
 

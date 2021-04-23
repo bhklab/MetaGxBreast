@@ -13,4 +13,4 @@ NeedsCompilation: no
 biocViews: ExpressionData, ExperimentHub, CancerData, Homo_sapiens_Data, ArrayExpress, GEO, NCI, MicroarrayData, ExperimentData
 LazyData: yes
 Packaged: 2018-03-12 20:33:41 UTC; Michael Zon
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

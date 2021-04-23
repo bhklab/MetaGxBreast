@@ -4,9 +4,15 @@
 \alias{loadBreastDatasets}
 \title{Function to load breast cancer SummarizedExperiment objectsfrom the Experiment Hub}
 \usage{
-loadBreastDatasets(rescale = FALSE, minNumberGenes = 0,
-  minNumberEvents = 0, minSampleSize = 0, keepCommonOnly = FALSE,
-  imputeMissing = FALSE, removeDuplicates = FALSE)
+loadBreastDatasets(
+  rescale = FALSE,
+  minNumberGenes = 0,
+  minNumberEvents = 0,
+  minSampleSize = 0,
+  keepCommonOnly = FALSE,
+  imputeMissing = FALSE,
+  removeDuplicates = FALSE
+)
 }
 \arguments{
 \item{rescale}{apply centering and scaling to the expression sets (default FALSE)}
