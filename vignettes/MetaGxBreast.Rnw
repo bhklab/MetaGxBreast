@@ -62,7 +62,7 @@ To load the packages into R and obtain some datasets, please use the following
 commands:
 <<loadlib>>=
 library(MetaGxBreast)
-esets = MetaGxBreast::loadBreastEsets(loadString = c("CAL", "DFHCC", "DFHCC2",
+esets <- MetaGxBreast::loadBreastEsets(loadString = c("CAL", "DFHCC", "DFHCC2",
     "DFHCC3", "DUKE", "DUKE2", "EMC2"))[[1]]
 @
 
@@ -89,6 +89,7 @@ parameters are shown below:
 To obtain the number of samples per dataset, run the following:
 
 <<sampleNumber-summary, results=tex>>=
+library(Biobase)
 numSamples <- vapply(seq_along(esets), FUN=function(i, esets){
   length(sampleNames(esets[[i]]))
   }, numeric(1), esets=esets)
@@ -120,15 +121,15 @@ pDataID <- c("er","pgr", "her2", "age_at_initial_pathologic_diagnosis",
 pDataPercentSummaryTable <- NULL
 pDataSummaryNumbersTable <- NULL
 
-pDataSummaryNumbersList = lapply(esets, function(x)
+pDataSummaryNumbersList <- lapply(esets, function(x)
   vapply(pDataID, function(y) sum(!is.na(pData(x)[,y])), numeric(1)))
 
-pDataPercentSummaryList = lapply(esets, function(x)
+pDataPercentSummaryList <- lapply(esets, function(x)
   vapply(pDataID, function(y)
     sum(!is.na(pData(x)[,y]))/nrow(pData(x)), numeric(1))*100)
 
-pDataSummaryNumbersTable = sapply(pDataSummaryNumbersList, function(x) x)
-pDataPercentSummaryTable = sapply(pDataPercentSummaryList, function(x) x)
+pDataSummaryNumbersTable <- sapply(pDataSummaryNumbersList, function(x) x)
+pDataPercentSummaryTable <- sapply(pDataPercentSummaryList, function(x) x)
 
 rownames(pDataSummaryNumbersTable) <- pDataID
 rownames(pDataPercentSummaryTable) <- pDataID
@@ -140,19 +141,19 @@ rownames(pDataSummaryNumbersTable)[nrow(pDataSummaryNumbersTable)] <- "Total"
 
 
 # Generate a heatmap representation of the pData
-pDataPercentSummaryTable<-t(pDataPercentSummaryTable)
-pDataPercentSummaryTable<-cbind(Name=(rownames(pDataPercentSummaryTable))
+pDataPercentSummaryTable <- t(pDataPercentSummaryTable)
+pDataPercentSummaryTable <- cbind(Name=(rownames(pDataPercentSummaryTable))
                                 ,pDataPercentSummaryTable)
 
 nba<-pDataPercentSummaryTable
-gradient_colors = c("#ffffff","#ffffd9","#edf8b1","#c7e9b4","#7fcdbb",
+gradient_colors <- c("#ffffff","#ffffd9","#edf8b1","#c7e9b4","#7fcdbb",
                     "#41b6c4","#1d91c0","#225ea8","#253494","#081d58")
 
 library(lattice)
 nbamat<-as.matrix(nba)
-rownames(nbamat)<-nbamat[,1]
-nbamat<-nbamat[,-1]
-Interval<-as.numeric(c(10,20,30,40,50,60,70,80,90,100))
+rownames(nbamat) <- nbamat[,1]
+nbamat <- nbamat[,-1]
+Interval <- as.numeric(c(10,20,30,40,50,60,70,80,90,100))
 
 levelplot(nbamat,col.regions=gradient_colors,
           main="Available Clinical Annotation",

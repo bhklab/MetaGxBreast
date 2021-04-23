@@ -1,36 +1,57 @@
 #' Function to load breast cancer expression sets from the Experiment Hub
 #'
-#' This function returns breast cancer datasets from the hub and a vector of patients from the datasets that are most likely duplicates
-#' @param loadString a character vector specifying which data will be loaded. The default is "majority", which loads in 37 of the 39 datasets.
-#' The other option is to provide a character vecotr of the names of the datasets to load. The metabric and tcga datasets areloaded separately as they are
-#' very large and doing so will help prevent memory allocation errors for R windows. Furthermore, these datasets are so large that they
-#' dominate statistical analyses so it is best that they are analyzed separate of the 37 smaller datasets loaded with the string majority
-#' @param removeDuplicates remove patients with a Spearman correlation greater than or equal to 0.98 with other patient expression profiles (default TRUE)
-#' @param quantileCutoff A nueric between 0 and 1 specifying to remove genes with standard deviation below the required quantile (default 0)
-#' @param rescale apply centering and scaling to the expression sets (default FALSE)
-#' @param minNumberGenes an integer specifying to remove expression sets with less genes than this number (default 0)
-#' @param minNumberEvents an integer specifying how man survival events must be in the dataset to keep the dataset (default 0)
-#' @param minSampleSize an integer specifying the minimum number of patients required in an eset (default 0)
-#' @param removeRetracted remove datasets from retracted papers (default TRUE, currently just PMID17290060 dataset)
-#' @param removeSubsets remove datasets that are a subset of other datasets (defeault TRUE, currently just PMID19318476)
-#' @param keepCommonOnly remove probes not common to all datasets (default FALSE)
-#' @param imputeMissing remove patients from datasets with missing expression values
-#' @return a list with 2 elements. The First element named esets contains the datasets. The second element named duplicates contains
-#' a vector with patient IDs for the duplicate patients (those with  Spearman correlation greater than or equal to 0.98 with other patient expression profiles).
-#' @export
-#' @importFrom Biobase esApply featureNames sampleNames exprs pData experimentData
+#' This function returns breast cancer datasets from the hub and a vector of
+#' patients from the datasets that are most likely duplicates
+#'
+#' @param loadString a character vector specifying which data will be loaded.
+#'   The default is "majority", which loads in 37 of the 39 datasets.
+#'   The other option is to provide a character vecotr of the names of the
+#'   datasets to load. The metabric and tcga datasets areloaded separately as
+#'   they are very large and doing so will help prevent memory allocation errors
+#'   for R windows. Furthermore, these datasets are so large that they dominate
+#'   statistical analyses so it is best that they are analyzed separate of the
+#'   37 smaller datasets loaded with the string majority
+#' @param removeDuplicates remove patients with a Spearman correlation greater
+#'   than or equal to 0.98 with other patient expression profiles (default TRUE)
+#' @param quantileCutoff A nueric between 0 and 1 specifying to remove genes
+#'   with standard deviation below the required quantile (default 0)
+#' @param rescale apply centering and scaling to the expression sets
+#'   (default FALSE)
+#' @param minNumberGenes an integer specifying to remove expression sets with
+#'   less genes than this number (default 0)
+#' @param minNumberEvents an integer specifying how man survival events must be
+#'   in the dataset to keep the dataset (default 0)
+#' @param minSampleSize an integer specifying the minimum number of patients
+#'   required in an eset (default 0)
+#' @param removeRetracted remove datasets from retracted papers (default TRUE,
+#'   currently just PMID17290060 dataset)
+#' @param removeSubsets remove datasets that are a subset of other datasets
+#'   (defeault TRUE, currently just PMID19318476)
+#' @param keepCommonOnly remove probes not common to all datasets
+#'   (default FALSE)
+#' @param imputeMissing remove patients from datasets with missing expression
+#'   values
+#'
+#' @return a list with 2 elements. The First element named esets contains the
+#' datasets. The second element named duplicates contains a vector with patient
+#' IDs for the duplicate patients (those with Spearman correlation greater
+#' than or equal to 0.98 with other patient expression profiles).
+#'
+#' @examples
+#'
+#' ## Use the default loadString="majority" if you want the 37 smaller datasets
+#' esetsAndDups <- loadBreastEsets(loadString = c("CAL", "DFHCC", "DFHCC2",
+#'     "DFHCC3", "DUKE", "DUKE2", "EMC2"))
+#'
+#' @importFrom Biobase esApply featureNames sampleNames exprs pData
+#'   experimentData
 #' @importFrom lattice levelplot
 #' @importFrom impute impute.knn
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom AnnotationHub query
 #' @importFrom stats complete.cases sd quantile
-#' @examples
-#'
-#' #Use the default loadString = "majority" if you want the 37 smaller datasets
-#' esetsAndDups = loadBreastEsets(loadString = c("CAL", "DFHCC", "DFHCC2", "DFHCC3", "DUKE", "DUKE2", "EMC2"))
-
-
-loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE,
+#' @export
+loadBreastEsets <- function(loadString = "majority", removeDuplicates = TRUE,
     quantileCutoff = 0, rescale = FALSE, minNumberGenes = 0,
     minNumberEvents = 0, minSampleSize = 0, removeRetracted = TRUE,
     removeSubsets = TRUE, keepCommonOnly = FALSE, imputeMissing = FALSE)
@@ -56,7 +77,7 @@ loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE,
   intersectMany <- function(lst){
     ## Find the intersection of multiple vectors stored as elements of a
     ## list, through a tail-recursive function.
-    if (length(lst)==2){
+    if (length(lst) == 2){
       return(intersect(lst[[1]],lst[[2]]))
     }else{
       return(intersectMany(c(list(intersect(lst[[1]],lst[[2]])),lst[seq(-1, -2)])))
@@ -84,37 +105,38 @@ loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE,
   hub = ExperimentHub::ExperimentHub()
   #AnnotationHub::possibleDates(hub)
   #ovarianData = query(hub, c("MetaGxOvarian", "ExpressionSet"))
-  breastData = query(hub, c("MetaGxBreast", "ExpressionSet"))
-  tcgaInd = which(grepl("TCGA", breastData$title))
+  breastData <- query(hub, c("MetaGxBreast", "ExpressionSet"))
+  tcgaInd <- which(grepl("TCGA", breastData$title))
   metabricInd = which(grepl("METABRIC", breastData$title))
   if(length(loadString) == 1) {
     switch(loadString,
         "majority" = { breastData <- breastData[-c(metabricInd, tcgaInd)] },
         'tcga' = { breastData <- breastData[tcgaInd] },
-        'metabric' = { breastData <- breadData[metabricInd] },
+        'metabric' = { breastData <- breastData[metabricInd] },
         stop("loadString needs to be one of majority, metabric, tcga, or a
             scharacter vector of datasets to load from the hub")
         )
   } else {
-    keepIndVec = c()
+    keepIndVec <- c()
     for(i in seq_len(length(loadString)))
     {
-      keepInd = which(grepl(paste0(loadString[i], "_"), paste0(breastData$title, "_")))
+      keepInd <- which(grepl(paste0(loadString[i], "_"), paste0(breastData$title, "_")))
       if(length(keepInd) == 0){
-        stop(paste(loadString[i], "could not be found in the MetaGxBreast package in the experiment hub"))
+        stop(paste(loadString[i],
+            "could not be found in the MetaGxBreast package in the experiment hub"))
       }else{
-        keepIndVec = c(keepIndVec, keepInd)
+        keepIndVec <- c(keepIndVec, keepInd)
       }
     }
-    breastData = breastData[keepIndVec]
+    breastData <- breastData[keepIndVec]
   }
 
   esets <- list()
   for(i in seq_len(length(breastData)))
   {
-    dataName = breastData[i]$title
-    esets[[i]] = breastData[[names(breastData)[i]]]
-    names(esets)[i] = breastData[i]$title
+    dataName <- breastData[i]$title
+    esets[[i]] <- breastData[[names(breastData)[i]]]
+    names(esets)[i] <- breastData[i]$title
   }
 
   ## -----------------------------------------------------------------------------
@@ -153,35 +175,37 @@ loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE,
       keepix <- setdiff(colnames(eset@assayData$exprs), rmix)
       if(length(keepix) != length(colnames(eset@assayData$exprs)))
       {
-        newEset = ExpressionSet(Biobase::exprs(eset)[, keepix, drop=FALSE])
-        newEset@experimentData = eset@experimentData
-        newEset@phenoData = eset@phenoData
-        newEset@phenoData@data = Biobase::pData(eset)[keepix, , drop=FALSE]
-        newEset@featureData = eset@featureData
-        eset = newEset
+        newEset <- ExpressionSet(Biobase::exprs(eset)[, keepix, drop=FALSE])
+        newEset@experimentData <- eset@experimentData
+        newEset@phenoData <- eset@phenoData
+        newEset@phenoData@data <- Biobase::pData(eset)[keepix, , drop=FALSE]
+        newEset@featureData <- eset@featureData
+        eset <- newEset
       }
       #Biobase::exprs(eset) <- Biobase::exprs(eset)[, keepix, drop=FALSE]
       #Biobase::pData(eset) <- Biobase::pData(eset)[keepix, , drop=FALSE]
-
     }
 
     ##include study if it has enough samples and events:
-    if (!is.na(minNumberEvents)
-        && exists("minSampleSize") && !is.na(minSampleSize)
-        && minNumberEvents > 0
-        && sum(eset$vital_status == "deceased") < minNumberEvents
-        || ncol(eset) < minSampleSize)
+    if (!is.na(minNumberEvents) &&
+        exists("minSampleSize") && !is.na(minSampleSize) &&
+        minNumberEvents > 0 &&
+        sum(eset$vital_status == "deceased") < minNumberEvents ||
+        ncol(eset) < minSampleSize)
     {
-      message(paste("excluding",
-                    "(minNumberEvents or minSampleSize)"))
+      message(paste("excluding", "(minNumberEvents or minSampleSize)"))
       next
     }
     if(nrow(eset) < minNumberGenes) {
       message(paste("excluding experiment hub dataset",breastData[i]$title,"(minNumberGenes)"))
       next
     }
-    if(removeRetracted && length(grep("retracted", Biobase::experimentData(eset)@other$warnings$warnings)) > 0){
-      message(paste("excluding experiment hub dataset",breastData[i]$title,"(removeRetracted)"))
+    if(removeRetracted &&
+        length(grep("retracted",
+            Biobase::experimentData(eset)@other$warnings$warnings)) > 0)
+    {
+      message(paste("excluding experiment hub dataset",
+          breastData[i]$title,"(removeRetracted)"))
       next
     }
     if(removeSubsets && length(grep("subset", Biobase::experimentData(eset)@other$warnings$warnings)) > 0){
@@ -212,11 +236,11 @@ loadBreastEsets = function(loadString = "majority", removeDuplicates = TRUE,
 
   if (length(ids.with.missing.data) > 0 && imputeMissing) {
     for (i in ids.with.missing.data) {
-      Biobase::exprs(esets[[i]]) = impute::impute.knn(Biobase::exprs(esets[[i]]))$data
+      Biobase::exprs(esets[[i]]) <- impute::impute.knn(Biobase::exprs(esets[[i]]))$data
     }
   }
 
-  retList = list(esets, duplicates)
-  names(retList) = c("esets", "duplicates")
+  retList <- list(esets, duplicates)
+  names(retList) <- c("esets", "duplicates")
   return(retList)
 }

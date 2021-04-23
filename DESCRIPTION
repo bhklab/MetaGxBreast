@@ -2,15 +2,41 @@ Package: MetaGxBreast
 Type: Package
 Title: Transcriptomic Breast Cancer Datasets
 Version: 1.11.1
-Date: 2018-02-25
-Author: Michael Zon <michaelzon7@gmail.com>, Deena M.A. Gendoo  <deena.gendoo@utoronto.ca>, Benjamin Haibe-Kains <benjamin.haibe.kains@utoronto.ca>
-Maintainer: Michael Zon <michaelzon7@gmail.com>
-Description: A collection of Breast Cancer Transcriptomic Datasets that are part of the MetaGxData package compendium. 
-License: Artistic-2.0
-Depends: Biobase, stats, lattice, impute, AnnotationHub, ExperimentHub, SummarizedExperiment, R (>= 3.6.0)
-Suggests: testthat, xtable
+Date: 2020-04-23
+Authors@R: c(
+    person(
+        family='Zon',
+        given='Michael',
+        role='aut',
+        email='michaelzon7@gmail.com'
+    ),
+    person(
+        family='Gendoo',
+        given='Deena M.A.',
+        role='aut',
+        email='deena.gendoo@utoronto.ca'
+    ),
+    person(
+        family='Eeles',
+        given='Christopher',
+        role='ctb',
+        email='christopher.eeles@uhnresearch.ca'
+    ),
+    person(
+        family='Haibe-Kains',
+        given='Benjamin',
+        role=c('aut', 'cre'),
+        email='benjamin.haibe.kains@utoronto.ca'
+    ))
+Description: A collection of Breast Cancer Transcriptomic Datasets that are 
+  part of the MetaGxData package compendium. 
+License: Apache License (>= 2)
+Depends: R (>= 3.6.0), Biobase, AnnotationHub, ExperimentHub
+Imports: stats, lattice, impute, SummarizedExperiment
+Suggests: testthat, xtable, tinytex
 NeedsCompilation: no
-biocViews: ExpressionData, ExperimentHub, CancerData, Homo_sapiens_Data, ArrayExpress, GEO, NCI, MicroarrayData, ExperimentData
+biocViews: ExpressionData, ExperimentHub, CancerData, Homo_sapiens_Data, 
+  ArrayExpress, GEO, NCI, MicroarrayData, ExperimentData
 LazyData: yes
 Packaged: 2018-03-12 20:33:41 UTC; Michael Zon
 RoxygenNote: 7.1.1

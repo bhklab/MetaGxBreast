@@ -2,7 +2,8 @@
 % Please edit documentation in R/loadBreastDatasets.R
 \name{loadBreastDatasets}
 \alias{loadBreastDatasets}
-\title{Function to load breast cancer SummarizedExperiment objectsfrom the Experiment Hub}
+\title{Function to load breast cancer SummarizedExperiment objects from the
+  Experiment Hub}
 \usage{
 loadBreastDatasets(
   rescale = FALSE,
@@ -15,28 +16,36 @@ loadBreastDatasets(
 )
 }
 \arguments{
-\item{rescale}{apply centering and scaling to the expression sets (default FALSE)}
+\item{rescale}{apply centering and scaling to the expression sets
+(default FALSE)}
 
-\item{minNumberGenes}{an integer specifying to remove expression sets with less genes than this number (default 0)}
+\item{minNumberGenes}{an integer specifying to remove expression sets with
+less genes than this number (default 0)}
 
-\item{minNumberEvents}{an integer specifying how man survival events must be in the dataset to keep the dataset (default 0)}
+\item{minNumberEvents}{an integer specifying how man survival events must be
+in the dataset to keep the dataset (default 0)}
 
-\item{minSampleSize}{an integer specifying the minimum number of patients required in a summarizedExperiment (default 0)}
+\item{minSampleSize}{an integer specifying the minimum number of patients
+required in a summarizedExperiment (default 0)}
 
-\item{keepCommonOnly}{remove entrezIDs not common to all datasets (default FALSE)}
+\item{keepCommonOnly}{remove entrezIDs not common to all datasets
+(default FALSE)}
 
-\item{imputeMissing}{remove patients from datasets with missing expression values}
+\item{imputeMissing}{remove patients from datasets with missing expression
+values}
 
-\item{removeDuplicates}{remove patients with a Spearman correlation greater than or equal to 0.98 with other patient expression profiles (default TRUE)}
+\item{removeDuplicates}{remove patients with a Spearman correlation greater
+than or equal to 0.98 with other patient expression profiles (default TRUE)}
 }
 \value{
-a list with 2 elements. The First element named summarizedExperiments contains the datasets. The second element named duplicates contains
-a vector with patient IDs for the duplicate patients (those with  Spearman correlation greater than or equal to 0.98 with other patient expression profiles).
+A `list` with 2 elements. The First element named
+  `SummarizedExperiment`s contains the datasets. The second element named
+  duplicates contains a vector with patient IDs for the duplicate patients
+  (those with  Spearman correlation greater than or equal to 0.98 with other
+  patient expression profiles).
 }
 \description{
-This function returns breast cancer datasets from the hub and a vector of patients from the datasets that are duplicates based on a spearman correlation > 0.98
-}
-\examples{
-
-experimentsAndDups = loadBreastDatasets()
+This function returns breast cancer datasets from the hub and a vector of
+  patients from the datasets that are duplicates based on a spearman
+  correlation > 0.98
 }
